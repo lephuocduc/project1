@@ -1,0 +1,30 @@
+.sortable:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+
+.arrow {
+    border-width: 0 3px 3px;
+    border-style: solid;
+    border-color: transparent transparent #999999 transparent;
+}
+
+.visible {
+    border-color: transparent transparent #000000 transparent;
+}
+
+.up {
+    border-width: 0 3px 3px;
+}
+
+.down {
+    border-width: 3px 3px 0;
+}
+
+.asc::after {
+    content: ' ▲';
+}
+
+.desc::after {
+    content: ' ▼';
+}

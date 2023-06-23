@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Terraform Data</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" href="/styles.css">
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">Terraform Data</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Data <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Create New
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#createVMModal">VM</a>
+            <a class="dropdown-item" href="#">Folder</a>
+            <a class="dropdown-item" href="#">Network</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container mt-4">
+    <table id="terraformTable" class="table table-striped">
+        <thead>
+            <tr>
+                <th class="sortable" onclick="sortTable(0)">Mode</th>
+                <th class="sortable" onclick="sortTable(1)">Type</th>
+                <th class="sortable" onclick="sortTable(2)">TerraformName</th>
+                <th class="sortable" onclick="sortTable(3)">vCenterName</th>                
+            </tr>
+          </thead>          
+        <tbody>
+            <% resources.forEach(item => { %>
+                <tr>
+                  <td><%= item.mode %></td>
+                  <td><%= item.type %></td>
+                  <td><%= item.terraformName %></td>
+                  <td><%= item.vCenterName %></td>
+                </tr>
+              <% }); %>              
+        </tbody>
+      </table>
+  </div>
+  
+    <!-- Create New VM Modal -->
+    <div class="modal fade" id="createVMModal" tabindex="-1" role="dialog" aria-labelledby="createVMModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createVMModalLabel">Create New VM</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form Start -->
+                    <form id="createNewVM">
+                        <div class="form-group">
+                            <label for="vmName">VM Name</label>
+                            <input type="text" class="form-control" id="vmName" name="vmName" required pattern="^[a-zA-Z_][a-zA-Z0-9_-]*$">
+                        </div>
+                        <div class="form-group">
+                            <label for="resourcePool">Resource Pool</label>
+                            <select class="form-control" id="resourcePool" name="resourcePool">
+                                <% resourcePools.forEach(pool => { %>
+                                    <option value="<%= pool %>"><%= pool %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="datastore">Datastore</label>
+                            <select class="form-control" id="datastore" name="datastore">
+                                <% datastores.forEach(store => { %>
+                                    <option value="<%= store %>"><%= store %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cpu">Number of CPU</label>
+                            <input type="number" class="form-control" id="cpu" name="cpu" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ram">RAM (MB)</label>
+                            <input type="number" class="form-control" id="ram" name="ram" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="guestOS">Guest OS</label>
+                                <select class="form-control" id="guestOS" name="guestOS" required>
+                                    <% guestOSOptions.forEach(option => { %>
+                                        <option value="<%= option %>"><%= option %></option>
+                                    <% }); %>
+                                </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="network">Network</label>
+                            <select class="form-control" id="network" name="network">
+                                <% networks.forEach(network => { %>
+                                    <option value="<%= network %>"><%= network %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="diskLabel">Disk Label</label>
+                            <input type="text" class="form-control" id="diskLabel" name="diskLabel" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="diskSize">Disk Size (GB)</label>
+                            <input type="number" class="form-control" id="diskSize" name="diskSize" min="1" required>
+                        </div>
+                    </form>
+                    <!-- Form End -->
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" form="createNewVM">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden div -->
+  <div id="resourcesData" data-resources="<%= JSON.stringify(resources) %>" hidden></div>
+
+      <!-- Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.tablesorter/2.31.3/js/jquery.tablesorter.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="/script.js"></script>   
+</body>
+</html>
